@@ -2,14 +2,10 @@
 /* jshint node:true, unused:true */
 'use strict';
 
-var app = require('express')();
-var _ = require('lodash');
+var app = module.exports = require('express')();
 
-var exports = module.exports = {
-    app: app,
-    attachDefaultRouters: attachDefaultRouters,
-    start: start,
-};
+app.attachDefaultRouters = attachDefaultRouters;
+app.start = start;
 
 function attachDefaultRouters(controllers) {
     app.use('/jobs', require('./routers/job')(_.get(controllers, 'Job')));
@@ -28,6 +24,8 @@ function start(opts) {
     });
     console.log('application started, listening on:', app.get('port'));
 }
+
+var _ = require('lodash');
 
 if (!module.parent) {
     var config = require('./config');
