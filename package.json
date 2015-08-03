@@ -1,6 +1,6 @@
 {
   "name": "restq",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repository": "https://github.com/gradecam/nodejs-rest-queue.git",
   "license": "MIT",
   "private": false,
