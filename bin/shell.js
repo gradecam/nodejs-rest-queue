@@ -4,21 +4,29 @@
 /* jshint node:true, unused:true */
 'use strict';
 
-var MongooseReplPlus = require('repl-plus').MongooseReplPlus;
+var ReplPlus = require('repl-plus').ReplPlus;
+var config = require('../config');
 
-var mr = new MongooseReplPlus()
-    .connect()
-    .includeDir(__dirname + '/../models')
-    .start({prompt: 'restQ> ', context: {listJobs: listJobs}});
+var conn = config.connectDb(config);
+
+conn.on('connected', function() {
+    var repl = new ReplPlus();
+    var models = require('restq-mongoose-models').models(conn);
+    repl.start({
+        prompt: 'restQ> ',
+        context: {
+            models: models,
+            listJobs: listJobs.bind(null, models),
+        }
+    });
+});
 
 function displayResults(results) {
     console.log('\r');
     console.log(results);
 }
 
-function listJobs() {
-    var Job = mongoose.models.Job;
+function listJobs(models) {
+    var Job = models.Job;
     Job.find().exec().then(displayResults);
 }
-
-var mongoose = require('mongoose');
