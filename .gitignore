@@ -7,3 +7,4 @@ build/
 dist/
 *.pyc
 npm-debug.log
+config.js
