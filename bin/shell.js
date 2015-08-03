@@ -11,7 +11,7 @@ var conn = config.connectDb(config);
 
 conn.on('connected', function() {
     var repl = new ReplPlus();
-    var models = require('restq-mongoose-models').models(conn);
+    var models = require('../models')(conn);
     repl.start({
         prompt: 'restQ> ',
         context: {

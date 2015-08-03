@@ -9,12 +9,14 @@
   },
   "dependencies": {
     "body-parser": "^1.13.2",
+    "cron-parser": "^0.6.4",
     "express": "^4.13.1",
     "lodash": "^3.10.0",
+    "moment-timezone": "^0.4.0",
     "mongoose": "^4.1.0",
     "morgan": "^1.6.1",
-    "q": "^1.4.1",
-    "restq-mongoose-models": "https://github.com/gradecam/nodejs-restq-mongoose-models.git"
+    "ms": "^0.7.1",
+    "q": "^1.4.1"
   },
   "devDependencies": {
     "repl-plus": "^0.2.0"

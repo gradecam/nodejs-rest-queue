@@ -34,7 +34,7 @@ if (!module.parent) {
     conn.on('connected', function() {
         start({
             config: config,
-            models: require('restq-mongoose-models').models(conn),
+            models: require('./models')(conn),
         });
     })
 }
