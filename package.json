@@ -1,19 +1,20 @@
 {
-  "name": "rest-queue",
+  "name": "restq",
   "version": "0.1.0",
-  "private": true,
+  "repository": "https://github.com/gradecam/nodejs-rest-queue.git",
+  "license": "MIT",
+  "private": false,
   "scripts": {
-    "start": "node --harmony app/index.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "body-parser": "^1.13.2",
-    "co": "^4.5.4",
-    "cron-parser": "^0.6.3",
     "express": "^4.13.1",
     "lodash": "^3.10.0",
-    "moment-timezone": "^0.4.0",
-    "mongoose": "^4.0.6",
-    "morgan": "^1.6.1"
+    "mongoose": "^4.1.0",
+    "morgan": "^1.6.1",
+    "q": "^1.4.1",
+    "restq-mongoose-models": "https://github.com/gradecam/nodejs-restq-mongoose-models.git"
   },
   "devDependencies": {
     "repl-plus": "^0.2.0"
