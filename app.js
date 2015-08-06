@@ -29,7 +29,8 @@ var _ = require('lodash');
 
 if (!module.parent) {
     var config = require('./config');
-    var conn = config.connectDb(config);
+    var db = require('./db');
+    var conn = db.createConnection(config.db.uri, config.db.options);
     app.use(require('morgan')(config.env));
     conn.on('connected', function() {
         start({

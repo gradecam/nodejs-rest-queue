@@ -21,27 +21,6 @@ var configs = {
 var config = module.exports = configs[env];
 config.env = env;
 
-config.connectDb = function connectDb(cfg) {
-    var conn = mongoose.createConnection(cfg.db.uri, cfg.db.options);
-    conn.on('connected', function() {
-        console.log('mongodb connection open');
-    });
-    conn.on('error', function(err) {
-        console.error('mongoose error:', err);
-    });
-    process.on('SIGINT', closeConnections);
-    process.on('SIGTERM', closeConnections);
-    return conn;
-}
-
-function closeConnections() {
-    console.log('\nclosing db connection due to app termination.');
-    for (var i=0, len=mongoose.connections.length; i<len; i++) {
-        mongoose.connections[i].close();
-    }
-    process.exit(0);
-}
-
 if (process.env.PORT) {
     config.port = process.env.PORT;
 }
@@ -66,5 +45,3 @@ if (process.env.MONGO_JSON) {
         options: json.options,
     };
 }
-
-var mongoose = require('mongoose');

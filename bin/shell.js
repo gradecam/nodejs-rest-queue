@@ -6,8 +6,9 @@
 
 var ReplPlus = require('repl-plus').ReplPlus;
 var config = require('../config');
+var db = require('../db');
 
-var conn = config.connectDb(config);
+var conn = db.createConnection(config.db.uri, config.db.options);
 
 conn.on('connected', function() {
     var repl = new ReplPlus();

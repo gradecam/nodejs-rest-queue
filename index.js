@@ -4,6 +4,7 @@
 
 module.exports = function restQ(models) {
     app: require('./app'),
+    db: require('./db'),
     models: require('./models'),
     routers: require('./routers'),
 };
