@@ -19,7 +19,3 @@ module.exports = function modelLoader(conn, prefix) {
 };
 
 var fs = require('fs');
-
-var mongoose = require('mongoose');
-// Configure mongoose to use Q style promises
-mongoose.PromiseProvider.set(require('q').Promise);
