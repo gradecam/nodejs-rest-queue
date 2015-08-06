@@ -43,7 +43,7 @@ module.exports = function(conn, prefix) {
             started: new Date(),
         };
         if (!worker) { throw new Error('worker required'); }
-        var promise = q(this.findOneAndUpdate(query, update, {new: true, sort: {priority: -1}}).exec());
+        var promise = this.findOneAndUpdate(query, update, {new: true, sort: {priority: -1}}).exec();
         return promise.then(function(job) {
             if (!job) { return; }
             return job.addLogEntry({
@@ -51,7 +51,7 @@ module.exports = function(conn, prefix) {
                 level: 'info',
                 message: util.format('assigned worker: %s', worker),
             }).then(function() {
-                return q(job.save());
+                return job.save();
             });
         });
     };
@@ -60,7 +60,7 @@ module.exports = function(conn, prefix) {
         if (!(opts.id && opts.worker)) { throw new Error('id and worker are required'); }
         opts._id = opts.id;
         delete opts.id;
-        return q(this.findOne(opts).exec());
+        return this.findOne(opts).exec();
     }
 
     schema.statics.findFuture = function findFuture(opts) {
@@ -75,7 +75,7 @@ module.exports = function(conn, prefix) {
             current.topic = opts.topic;
         }
         var query = {$or: [future, current]};
-        return q(this.findOne(query).exec());
+        return this.findOne(query).exec();
     };
 
     schema.statics.findExpired = function findExpired(opts, lean) {
@@ -85,24 +85,24 @@ module.exports = function(conn, prefix) {
         }, opts);
         query = this.find(query);
         if (!lean) { query.populate('template'); }
-        return q(query.exec());
+        return query.exec();
     };
 
     schema.statics.scheduleJob = function scheduleJob(tpl, previous) {
-        var dfd;
+        var promise = q.resolve();
         if (!template) { throw new Error('template required'); }
         if (template.paused) { return null; }
         if (tpl._id) {
-            dfd = model.findOne({
+            promise = model.findOne({
                 template: tpl._id,
                 status: {$in: [status.scheduled, status.running]}
             }).exec();
         }
-        return q(dfd).then(function(job) {
+        return promise.then(function(job) {
             if (job) { return job; }
             var attempt = getAttemptNum(previous, tpl.retries || 0);
             var schAt = nextSchedule(tpl.schedule, attempt > 1);
-            return q(model.create({
+            return model.create({
                 template: tpl._id,
                 attempt: attempt,
                 retries: tpl.retries || 0,
@@ -113,7 +113,7 @@ module.exports = function(conn, prefix) {
                 name: tpl.name,
                 metadata: tpl.metadata,
                 timeout: tpl.timeout || settings.timeout,
-            }));
+            });
         });
     }
 
@@ -133,7 +133,7 @@ module.exports = function(conn, prefix) {
     schema.methods.addLogEntry = function addLogEntry(entry) {
         var self = this;
         var LogEntry = conn.model(prefix + 'LogEntry');
-        return q(LogEntry.create(_.extend({obj: self._id}, entry)));
+        return LogEntry.create(_.extend({obj: self._id}, entry));
     };
 
     schema.methods.logEntries = function logEntries(options) {
@@ -142,7 +142,7 @@ module.exports = function(conn, prefix) {
         options = options || {};
         if ('string' === typeof options.level) { options.level = options.level.split(','); }
         if (Array.isArray(options.level)) { options.level = {$in: options.level}; }
-        return q(LogEntry.find(_.extend({obj: self._id}, options)).sort({ts: 1}).lean().exec())
+        return LogEntry.find(_.extend({obj: self._id}, options)).sort({ts: 1}).lean().exec();
     };
 
     schema.pre('save', function(next) {

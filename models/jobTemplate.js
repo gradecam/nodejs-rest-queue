@@ -25,9 +25,9 @@ module.exports = function(conn, prefix) {
         var attempt = getAttemptNum(job, self.retries);
         var query = {template: self._id, status: {$in: [status.scheduled, status.running]}};
         var schAt = nextSchedule(self.schedule, attempt > 1);
-        return q(Job.findOne(query).exec()).then(function(job) {
+        return Job.findOne(query).exec().then(function(job) {
             if (job) { return job; }
-            return q(Job.create({
+            return Job.create({
                 template: self._id,
                 attempt: attempt,
                 retries: self.retries,
@@ -38,7 +38,7 @@ module.exports = function(conn, prefix) {
                 name: self.name,
                 metadata: self.metadata,
                 timeout: self.timeout,
-            }));
+            });
         });
     };
 
